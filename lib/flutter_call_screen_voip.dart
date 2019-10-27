@@ -10,4 +10,11 @@ class FlutterCallScreenVoip {
     final String version = await _channel.invokeMethod('getPlatformVersion');
     return version;
   }
+
+  static Future<Null> receiveCall(String msg) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent("msg", () => msg);
+    _channel.invokeMethod('getReceiveCall', args);
+    return null;
+  }
 }
