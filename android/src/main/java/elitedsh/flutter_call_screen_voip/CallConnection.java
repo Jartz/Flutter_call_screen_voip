@@ -27,15 +27,15 @@ public class CallConnection extends Connection {
             Log.d("Answer", "onAnswer() called");
             setConnectionCapabilities(getConnectionCapabilities() | Connection.CAPABILITY_HOLD);
             setAudioModeIsVoip(true);
-
-
             Intent intent = new Intent(Intent.ACTION_MAIN,null);
+            /*
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setClass(context, FlutterCallScreenVoipPlugin.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, 0);
             context.startActivity(intent);
-
-
+             */
+            intent.setClassName("elitedsh.tupsicologo", "elitedsh.tupsicologo.MainActivity");
+            context.sendBroadcast(intent);
             setDisconnected(new DisconnectCause(DisconnectCause.REJECTED));
             destroy();
 

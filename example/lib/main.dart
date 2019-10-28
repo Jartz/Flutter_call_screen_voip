@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
     }
 
     try {
-      await FlutterCallScreenVoip.receiveCall("desde flutter");
+      await FlutterCallScreenVoip.initialSetting("desde flutter");
     } on PlatformException {
       print('Failed to get platform version.');
     }
@@ -50,7 +50,18 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Column(
+            children: <Widget>[
+              Text('Running on: $_platformVersion\n'),
+              FlatButton(
+                child: Text("Receive Call"),
+                onPressed: () {
+                  FlutterCallScreenVoip.activeReceiveCall(
+                      "Active Received Call");
+                },
+              )
+            ],
+          ),
         ),
       ),
     );

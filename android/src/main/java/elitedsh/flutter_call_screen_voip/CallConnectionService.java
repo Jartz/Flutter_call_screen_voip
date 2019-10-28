@@ -51,19 +51,4 @@ public class CallConnectionService extends ConnectionService {
         Log.d("Service","onCreateIncomingHandoverConnection");
         return super.onCreateIncomingHandoverConnection(fromPhoneAccountHandle, request);
     }
-
-
-    private HashMap<String, String> bundleToMap(Bundle extras) {
-        HashMap<String, String> extrasMap = new HashMap<>();
-        Set<String> keySet = extras.keySet();
-        Iterator<String> iterator = keySet.iterator();
-
-        while(iterator.hasNext()) {
-            String key = iterator.next();
-            if (extras.get(key) != null) {
-                extrasMap.put(key, extras.get(key).toString());
-            }
-        }
-        return extrasMap;
-    }
 }

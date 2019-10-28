@@ -2,13 +2,12 @@ package elitedsh.flutter_call_screen_voip;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
-import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
 import android.telecom.PhoneAccount;
@@ -34,8 +33,6 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
   private final MethodChannel channel;
 
 
-
-
   private TelecomManager tm;
   private PhoneAccountHandle phoneAccountHandle;
   private String to = "3183413899";
@@ -45,14 +42,6 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
   String[] PERMISSIONS = {Manifest.permission.READ_CONTACTS, Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.MANAGE_OWN_CALLS};
 
   public static void registerWith(Registrar registrar) {
-
-/*
-    AssetManager assetManager = registrar.context().getAssets();
-    String key = registrar.lookupKeyForAsset("icons/heart.png");
-    AssetFileDescriptor fd = assetManager.openFd(key);
-    */
-
-
     final MethodChannel channel = new MethodChannel(registrar.messenger(), "flutter_call_screen_voip");
     channel.setMethodCallHandler(new FlutterCallScreenVoipPlugin(registrar.activity(),channel));
   }
@@ -68,19 +57,20 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
     if (call.method.equals("getPlatformVersion")) {
       result.success("Android " + android.os.Build.VERSION.RELEASE);
     }
+    else if (call.method.equals("initialSetting")) {
+      String msg =  call.argument("msg").toString();
+      initTelecom();
 
-    if (call.method.equals("getReceiveCall")) {
+    }
+    else if (call.method.equals("activeReceiveCall")) {
       String msg =  call.argument("msg").toString();
       Toast.makeText(activity,msg,Toast.LENGTH_LONG).show();
-      initTelecom();
       receiveCall(activity);
     }
-    
      else {
       result.notImplemented();
     }
   }
-
 
 
     public void initTelecom(){
@@ -88,12 +78,34 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
         activity.requestPermissions(PERMISSIONS, PERMISSION_ALL);
       }
       this.registerPhoneAccount();
-
+      if (!this.checkAccountConnection(activity)){
+        AlertDialog alertDialog = new AlertDialog.Builder(activity,AlertDialog.THEME_HOLO_LIGHT).create();
+        alertDialog.setTitle("Activa Tu Telefono");
+        alertDialog.setMessage("Debes activar la opcion del telefono apra receibir llamadas");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int which) {
+                    goToScreenSttingPhone();
+                    dialog.dismiss();
+                  }
+                });
+        alertDialog.show();
+      }
     }
 
+    //permissions
+  public static boolean hasPermissions(Context context, String... permissions) {
+    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+      for (String permission : permissions) {
+        if (context.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 
   private void registerPhoneAccount(){
-
     tm = (TelecomManager)
             activity.getSystemService(Context.TELECOM_SERVICE);
 
@@ -108,19 +120,6 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
                     .build();
     tm.registerPhoneAccount(phoneAccount);
   }
-
-  public static boolean hasPermissions(Context context, String... permissions) {
-    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
-      for (String permission : permissions) {
-        if (context.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-
 
   private boolean checkAccountConnection(Context context) {
     boolean isConnected = false;
@@ -142,7 +141,6 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
 
   void receiveCall(Context context) {
     if (this.checkAccountConnection(activity)){
-
       Log.d("Ikow Status", "Reicived call");
       Bundle callInfo = new Bundle();
       callInfo.putString("from",from);
@@ -151,16 +149,14 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
         return;
       }
       tm.addNewIncomingCall(phoneAccountHandle, callInfo);
-
-
     }else{
-      this.activePhoneAccountManual();
+      this.goToScreenSttingPhone();
     }
   }
-  ///////////// END ACTION CALL ///////////////////////
 
 
-  public void activePhoneAccountManual(){
+
+  public void goToScreenSttingPhone(){
     if (Build.MANUFACTURER.equalsIgnoreCase("Samsung")) {
       Intent intent = new Intent();
       intent.setComponent(new
