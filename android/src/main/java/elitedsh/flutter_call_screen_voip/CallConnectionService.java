@@ -10,6 +10,7 @@ import android.telecom.ConnectionRequest;
 import android.telecom.ConnectionService;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
+import android.telecom.VideoProfile;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -37,9 +38,14 @@ public class CallConnectionService extends ConnectionService {
     @Override
     public Connection onCreateIncomingConnection(PhoneAccountHandle connectionManagerPhoneAccount, ConnectionRequest request) {
         Log.d("Service","incomming");
+        Bundle extra = request.getExtras();
+
+        String from = extra.getString("from");
+        String name = extra.getString("name");
         CallConnection callConnection = new CallConnection(this);
-        callConnection.setCallerDisplayName("test call", TelecomManager.PRESENTATION_ALLOWED);
-        callConnection.setAddress(Uri.parse("Video iKow"), TelecomManager.PRESENTATION_ALLOWED);
+        callConnection.setCallerDisplayName(name, TelecomManager.PRESENTATION_ALLOWED);
+        callConnection.setAddress(Uri.parse(from), TelecomManager.PRESENTATION_ALLOWED);
+        callConnection.setVideoState(VideoProfile.STATE_BIDIRECTIONAL);
         callConnection.setRinging();
         callConnection.setInitializing();
         return callConnection;

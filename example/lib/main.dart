@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
     }
 
     try {
-      await FlutterCallScreenVoip.initialSetting("desde flutter");
+      await FlutterCallScreenVoip.initialSetting("iKow");
     } on PlatformException {
       print('Failed to get platform version.');
     }
@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
                 child: Text("Receive Call"),
                 onPressed: () {
                   FlutterCallScreenVoip.activeReceiveCall(
-                      "Active Received Call");
+                      "Maleja", "3183413899");
                 },
               )
             ],

@@ -3,10 +3,17 @@ package elitedsh.flutter_call_screen_voip;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.telecom.Connection;
 import android.telecom.DisconnectCause;
+import android.telecom.TelecomManager;
 import android.util.Log;
+
+import static elitedsh.flutter_call_screen_voip.FlutterCallScreenVoipPlugin.ACTION_ANSWER_CALL;
 
 
 public class CallConnection extends Connection {
@@ -19,25 +26,18 @@ public class CallConnection extends Connection {
                 setConnectionProperties(PROPERTY_SELF_MANAGED);
             }
             setAudioModeIsVoip(true);
-
         }
 
         @Override
         public void onAnswer(){
             Log.d("Answer", "onAnswer() called");
-            setConnectionCapabilities(getConnectionCapabilities() | Connection.CAPABILITY_HOLD);
-            setAudioModeIsVoip(true);
-            Intent intent = new Intent(Intent.ACTION_MAIN,null);
-            /*
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.setClass(context, FlutterCallScreenVoipPlugin.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, 0);
-            context.startActivity(intent);
-             */
-            intent.setClassName("elitedsh.tupsicologo", "elitedsh.tupsicologo.MainActivity");
-            context.sendBroadcast(intent);
-            setDisconnected(new DisconnectCause(DisconnectCause.REJECTED));
-            destroy();
+            //setConnectionCapabilities(getConnectionCapabilities() | Connection.CAPABILITY_HOLD);
+            //setAudioModeIsVoip(true);
+            sendCallRequestToActivity(ACTION_ANSWER_CALL);
+
+            //disconect
+            //setDisconnected(new DisconnectCause(DisconnectCause.REJECTED));
+            //destroy();
 
         }
 
@@ -60,6 +60,23 @@ public class CallConnection extends Connection {
 
 
 
+    private void sendCallRequestToActivity(final String action) {
+        final CallConnection instance = this;
+        final Handler handler = new Handler();
 
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(action);
+                    Bundle extras = new Bundle();
+                    extras.putSerializable("message", 1000);
+                    intent.putExtras(extras);
+
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            }
+        });
     }
+
+
+}
 

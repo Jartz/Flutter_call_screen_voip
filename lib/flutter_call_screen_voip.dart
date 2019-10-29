@@ -11,16 +11,18 @@ class FlutterCallScreenVoip {
     return version;
   }
 
-  static Future<Null> initialSetting(String msg) async {
+  static Future<Null> initialSetting(String nameApp) async {
     Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("msg", () => msg);
+    args.putIfAbsent("nameApp", () => nameApp);
     _channel.invokeMethod('initialSetting', args);
     return null;
   }
 
-  static Future<Null> activeReceiveCall(String msg) async {
+  static Future<Null> activeReceiveCall(
+      String nameScreen, String numberScreen) async {
     Map<String, dynamic> args = <String, dynamic>{};
-    args.putIfAbsent("msg", () => msg);
+    args.putIfAbsent("nameScreen", () => nameScreen);
+    args.putIfAbsent("numberScreen", () => numberScreen);
     _channel.invokeMethod('activeReceiveCall', args);
     return null;
   }
