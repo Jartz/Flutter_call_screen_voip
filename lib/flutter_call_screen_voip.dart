@@ -26,4 +26,9 @@ class FlutterCallScreenVoip {
     _channel.invokeMethod('activeReceiveCall', args);
     return null;
   }
+
+  static Future<Null> endCall() async {
+    _channel.invokeMethod('endCall');
+    return null;
+  }
 }

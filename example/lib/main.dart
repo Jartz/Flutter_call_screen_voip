@@ -59,6 +59,12 @@ class _MyAppState extends State<MyApp> {
                   FlutterCallScreenVoip.activeReceiveCall(
                       "Maleja", "3183413899");
                 },
+              ),
+              FlatButton(
+                child: Text("End Call"),
+                onPressed: () {
+                  FlutterCallScreenVoip.endCall();
+                },
               )
             ],
           ),

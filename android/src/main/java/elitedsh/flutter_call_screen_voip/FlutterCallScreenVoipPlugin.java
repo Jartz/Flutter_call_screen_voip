@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telecom.ConnectionService;
+import android.telecom.DisconnectCause;
 import android.telecom.PhoneAccount;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
@@ -50,7 +51,7 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
 
 
   int PERMISSION_ALL = 1;
-  String[] PERMISSIONS = {Manifest.permission.READ_CONTACTS, Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.MANAGE_OWN_CALLS};
+  String[] PERMISSIONS = {Manifest.permission.READ_CONTACTS, Manifest.permission.CALL_PHONE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.MANAGE_OWN_CALLS,Manifest.permission.ANSWER_PHONE_CALLS};
 
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), "flutter_call_screen_voip");
@@ -82,6 +83,9 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
       String nameScreen =  call.argument("nameScreen").toString();
       String numberScreen =  call.argument("numberScreen").toString();
       receiveCall(activity,nameScreen,numberScreen);
+    }
+    else if (call.method.equals("endCall")) {
+      fininshCall(activity);
     }
      else {
       result.notImplemented();
@@ -188,6 +192,14 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
     }
   }
 
+   void fininshCall(Context context){
+    if (context.checkSelfPermission(Manifest.permission.ANSWER_PHONE_CALLS) != PackageManager.PERMISSION_GRANTED) {
+      Log.d("Error", "no tiene ANSWER_PHONE_CALLS");
+      return;
+    }
+    tm.endCall();
+  }
+
 
   public void goToScreenSttingPhone(){
     if (Build.MANUFACTURER.equalsIgnoreCase("Samsung")) {
@@ -211,8 +223,15 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
       switch (intent.getAction()) {
         case ACTION_ANSWER_CALL:
           Log.d("ACTION_ANSWER_CALL","active");
+          PackageManager pm = context.getPackageManager();
+          Log.d("Open",context.getPackageName());
+          Intent launchIntent = pm.getLaunchIntentForPackage(context.getPackageName());
+          launchIntent.putExtra("some_data", "value");
+          context.startActivity(launchIntent);
+          CallConnection conn = new CallConnection(context);
+          conn.setDisconnected(new DisconnectCause(DisconnectCause.LOCAL));
+          conn.destroy();
           break;
-
       }
     }
   }

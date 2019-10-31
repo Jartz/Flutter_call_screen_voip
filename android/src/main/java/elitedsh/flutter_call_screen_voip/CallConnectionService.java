@@ -31,6 +31,7 @@ public class CallConnectionService extends ConnectionService {
 
     @Override
     public Connection onCreateOutgoingConnection(PhoneAccountHandle connectionManagerPhoneAccount, ConnectionRequest request) {
+        Log.d("contesto","ssdsfdf");
         return super.onCreateOutgoingConnection(connectionManagerPhoneAccount, request);
     }
 

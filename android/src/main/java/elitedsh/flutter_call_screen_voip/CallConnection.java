@@ -11,6 +11,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.telecom.Connection;
 import android.telecom.DisconnectCause;
 import android.telecom.TelecomManager;
+import android.telecom.VideoProfile;
 import android.util.Log;
 
 import static elitedsh.flutter_call_screen_voip.FlutterCallScreenVoipPlugin.ACTION_ANSWER_CALL;
@@ -25,19 +26,17 @@ public class CallConnection extends Connection {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
                 setConnectionProperties(PROPERTY_SELF_MANAGED);
             }
+
             setAudioModeIsVoip(true);
         }
 
         @Override
         public void onAnswer(){
+            super.onAnswer();
             Log.d("Answer", "onAnswer() called");
-            //setConnectionCapabilities(getConnectionCapabilities() | Connection.CAPABILITY_HOLD);
-            //setAudioModeIsVoip(true);
+            setConnectionCapabilities(getConnectionCapabilities() | Connection.CAPABILITY_HOLD);
+            setActive();
             sendCallRequestToActivity(ACTION_ANSWER_CALL);
-
-            //disconect
-            //setDisconnected(new DisconnectCause(DisconnectCause.REJECTED));
-            //destroy();
 
         }
 
@@ -58,7 +57,17 @@ public class CallConnection extends Connection {
             destroy();
         }
 
+    @Override
+    public void onHold() {
+        super.onHold();
+        Log.d("OnHold", "onHold() called");
+    }
 
+    @Override
+    public void onShowIncomingCallUi() {
+        super.onShowIncomingCallUi();
+        Log.d("onShowIncomingCallUi", "onShowIncomingCallUi() called");
+    }
 
     private void sendCallRequestToActivity(final String action) {
         final CallConnection instance = this;

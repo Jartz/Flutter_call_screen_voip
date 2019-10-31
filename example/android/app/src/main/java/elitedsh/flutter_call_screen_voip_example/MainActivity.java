@@ -20,24 +20,4 @@ public class MainActivity extends FlutterActivity {
     GeneratedPluginRegistrant.registerWith(this);
   }
 
-  @Override
-  protected void onResume() {
-    super.onResume();
-    mBroadcastReceiver = new BroadcastReceiver() {
-      @Override
-      public void onReceive(Context context, Intent intent) {
-        Log.d("Broadcast", "onReceive");
-        String action = intent.getAction();
-        switch (action) {
-        case "msg":
-          String mess = intent.getStringExtra("message");
-          break;
-        }
-      }
-    };
-
-    IntentFilter filter = new IntentFilter("msg");
-    registerReceiver(mBroadcastReceiver, filter);
-  }
-
 }
