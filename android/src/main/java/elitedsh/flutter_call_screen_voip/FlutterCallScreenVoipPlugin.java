@@ -101,8 +101,8 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
       this.registerPhoneAccount(nameApp);
       if (!this.checkAccountConnection(activity)){
         AlertDialog alertDialog = new AlertDialog.Builder(activity,AlertDialog.THEME_HOLO_LIGHT).create();
-        alertDialog.setTitle("Activa Tu Telefono");
-        alertDialog.setMessage("Debes activar la opcion del telefono apra receibir llamadas");
+        alertDialog.setTitle(nameApp+" Permiso Videollamada");
+        alertDialog.setMessage("Debes activar la opcion en setting para recibir Video llamadas");
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int which) {
@@ -216,7 +216,8 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
   }
 
 
-  private class VoiceBroadcastReceiver extends BroadcastReceiver {
+  private class VoiceBroadcastReceiver extends BroadcastReceiver
+  {
     @Override
     public void onReceive(Context context, Intent intent) {
       Log.d("onReceive","Broadcast");
