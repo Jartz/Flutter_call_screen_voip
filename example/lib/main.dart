@@ -72,6 +72,12 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () {
                   FlutterCallScreenVoip.endCall();
                 },
+              ),
+              FlatButton(
+                child: Text("open App"),
+                onPressed: () {
+                  FlutterCallScreenVoip.openAppBackground();
+                },
               )
             ],
           ),

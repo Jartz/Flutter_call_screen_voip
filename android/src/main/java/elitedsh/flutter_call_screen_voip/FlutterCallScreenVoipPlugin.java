@@ -80,6 +80,8 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
       String nameScreen = call.argument("nameScreen").toString();
       String numberScreen = call.argument("numberScreen").toString();
       receiveCallBackground(activity, nameScreen, numberScreen);
+    } else if (call.method.equals("openAppBackground")) {
+      openAppBackground(activity);
     } else if (call.method.equals("endCall")) {
       fininshCall(activity);
     } else {
@@ -201,6 +203,15 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
       return;
     }
     tm.endCall();
+  }
+
+  void openAppBackground(Context context) {
+    // context.startActivity(new Intent(this, MainActivity.class));
+    PackageManager pm = context.getPackageManager();
+    Log.d("Open", context.getPackageName());
+    Intent launchIntent = pm.getLaunchIntentForPackage(context.getPackageName());
+    context.startActivity(launchIntent);
+
   }
 
   public void goToScreenSttingPhone() {

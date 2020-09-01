@@ -36,6 +36,11 @@ class FlutterCallScreenVoip {
     return null;
   }
 
+  static Future<Null> openAppBackground() async {
+    _channel.invokeMethod('openAppBackground');
+    return null;
+  }
+
   static Future<Null> endCall() async {
     _channel.invokeMethod('endCall');
     return null;
