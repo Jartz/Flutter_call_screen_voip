@@ -27,6 +27,15 @@ class FlutterCallScreenVoip {
     return null;
   }
 
+  static Future<Null> receiveCallBackground(
+      String nameScreen, String numberScreen) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent("nameScreen", () => nameScreen);
+    args.putIfAbsent("numberScreen", () => numberScreen);
+    _channel.invokeMethod('receiveCallBackground', args);
+    return null;
+  }
+
   static Future<Null> endCall() async {
     _channel.invokeMethod('endCall');
     return null;

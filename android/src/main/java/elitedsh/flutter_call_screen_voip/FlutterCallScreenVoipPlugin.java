@@ -75,8 +75,11 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
     } else if (call.method.equals("activeReceiveCall")) {
       String nameScreen = call.argument("nameScreen").toString();
       String numberScreen = call.argument("numberScreen").toString();
-
       receiveCall(activity, nameScreen, numberScreen);
+    } else if (call.method.equals("receiveCallBackground")) {
+      String nameScreen = call.argument("nameScreen").toString();
+      String numberScreen = call.argument("numberScreen").toString();
+      receiveCallBackground(activity, nameScreen, numberScreen);
     } else if (call.method.equals("endCall")) {
       fininshCall(activity);
     } else {
@@ -179,6 +182,17 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
     } else {
       this.goToScreenSttingPhone();
     }
+  }
+
+  void receiveCallBackground(Context context, String nameScreen, String numberScreen) {
+    Log.d("receiveCallBackground", "initial Method");
+    Log.d("Ikow Status", "Received call");
+    Bundle callInfo = new Bundle();
+    callInfo.putString("from", numberScreen);
+    callInfo.putString("name", nameScreen);
+    Log.d("extras", numberScreen);
+    Log.d("extras", nameScreen);
+    tm.addNewIncomingCall(phoneAccountHandle, callInfo);
   }
 
   void fininshCall(Context context) {

@@ -61,6 +61,13 @@ class _MyAppState extends State<MyApp> {
                 },
               ),
               FlatButton(
+                child: Text("Receive Call Background"),
+                onPressed: () {
+                  FlutterCallScreenVoip.receiveCallBackground(
+                      "Maleja background", "3183413899");
+                },
+              ),
+              FlatButton(
                 child: Text("End Call"),
                 onPressed: () {
                   FlutterCallScreenVoip.endCall();
