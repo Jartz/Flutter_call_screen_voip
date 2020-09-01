@@ -143,7 +143,9 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
     Log.d("checkAccountConnection", "validation");
     boolean isConnected = false;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      if (activity.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+      Log.d("checkAccountConnection", "checkSelfPermission");
+      if (context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+        Log.d("checkAccountConnection", "PERMISSION_GRANTED");
         final List<PhoneAccountHandle> enabledAccounts = tm.getCallCapablePhoneAccounts();
         for (PhoneAccountHandle account : enabledAccounts) {
           if (account.getComponentName().getClassName().equals(CallConnectionService.class.getCanonicalName())) {
@@ -152,7 +154,7 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
           }
         }
       } else {
-        Log.d("Error", "no tiene READ_PHONE_STATE");
+        Log.d("Error", "no have READ_PHONE_STATE permission");
       }
 
     }
@@ -161,7 +163,7 @@ public class FlutterCallScreenVoipPlugin implements MethodCallHandler {
 
   void receiveCall(Context context, String nameScreen, String numberScreen) {
     Log.d("receiveCall", "initial Method");
-    if (this.checkAccountConnection(activity)) {
+    if (this.checkAccountConnection(context)) {
       Log.d("Ikow Status", "Received call");
       Bundle callInfo = new Bundle();
       callInfo.putString("from", numberScreen);
